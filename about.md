@@ -1,4 +1,8 @@
-# Phantato
+---
+layout: page
+title: About
+permalink: /about/
+---
 
 I'm a college student majoring in Information and Computing science and this is a blog recording my learning notes.
 
@@ -11,6 +15,3 @@ College of Science, Nanjing University of Aeronautics and Astronautics(NUAA), Na
 * Artificial Intelligence
 * DSA
 
-## Contact
-
-* tzh_1997@qq.com

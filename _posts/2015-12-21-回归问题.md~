@@ -1,0 +1,123 @@
+---
+layout: post
+title: 回归问题
+category: 人工智能
+tags: [人工智能, 机器学习]
+---
+
+前面提到在回归问题中,我们试图构造出从自变量到因变量的连续映射.
+
+<!--exerpt-->
+
+## 假设函数
+
+单变量线性回归的假设函数定义为:
+$$h_\theta(x)=\theta_0+\theta_1x$$
+我们通过确定待定系数$\theta_0$ 和$\theta_1$ 来给出一个$y=h_\theta(x)$.换言之,我们试图给出一个从输入(x)到输出(y)的线性函数$h_\theta(x)$
+
+## 评估函数
+
+我们通过评估函数来判断我们的假设函数好坏. 评估函数$J(\theta_0,\theta_1)$定义如下:
+$$J(\theta_0,\theta_1)=\frac1{2m}\sum_{i=1}^m(h_\theta(x^{(i)})−y^{(i)})^2$$
+单独看每一项,它是$\frac12\Delta y$,其中$\Delta y$代表$h_\theta(x^{(i)})−y^{(i)}$,或者说估计值和实际值的差.
+这个函数也被叫做“平方误差函数”.除以2只是为了应用梯度下降法时的计算方便.
+
+## 梯度下降法
+
+现在我们有了假设函数和评估它好坏的评估函数,接下来我们需要计算出假设函数中的待定系数.在单变量线性回归中我们使用梯度下降法来求解.
+梯度下降法的迭代形式为:
+$$\theta_i:=\theta_i−\alpha\frac{\partial J}{\partial\theta_i}$$
+其中$\alpha$为给定的学习速度.
+通过梯度下降法可以求解如下局部优化问题:
+$$\min_{\theta_1,\theta_2,\cdots,\theta_n} J(\theta_1,\theta_2,\cdots,\theta_n)$$
+
+## 单变量线性回归中的梯度下降法
+
+当实际应用于单变量线性回归时,我们把评估函数代入到迭代公式中,可以得到:
+$$
+\begin{aligned}
+\theta_0 & :=\theta_0-\frac\alpha m\sum_{i=1}^m(h_\theta(x^{(i)})-y^{(i)}) \\\\
+\theta_1 & :=\theta_1-\frac\alpha m\sum_{i=1}^m(h_\theta(x^{(i)})-y^{(i)})x^{(i)}
+\end{aligned}
+$$
+其中m为训练集所包含的样本个数.
+
+## 多个变量
+
+有时候一个训练样本可能有多个特征,自然我们需要研究多变量情况下的线性回归.
+接下来将尽可能地使用线性代数描述输入和输出的关系.
+
+用$x_i^{(j)}$表示第j个训练样本的第i个特征,其中$x_0^{(j)}=1$.**训练集**可以写为:
+$$
+X=
+\begin{pmatrix}
+x_0^{(1)} & x_1^{(1)} & \cdots & x_n^{(1)} \\\\
+x_0^{(2)} & x_1^{(2)} & \cdots & x_n^{(2)} \\\\
+\vdots & \vdots & \ddots & \vdots \\\\
+x_0^{(m)} & x_1^{(m)} & \cdots & x_n^{(m)} \\\\
+\end{pmatrix},
+Y=
+\begin{pmatrix}
+y^{(1)} \\\\ y^{(2)} \\\\ \vdots \\\\ y^{(m)}
+\end{pmatrix}
+$$
+
+## 假设函数
+
+过对单变量线性回归中的假设函数进行推广,可以得到:
+$$h_\theta(x)=\sum_{i=0}^n \theta_i*x_i=\theta^Tx$$
+
+## 评估函数
+通过对单变量线性回归中的评估函数进行推广,可以得到:
+$$
+\begin{aligned}
+J(\theta) & =\frac 1{2m}\sum_{j=1}^m(h_\theta(x^{(j)})−y^{(j)})^2 \\\\
+& =\frac 1{2m}(X\theta-Y)^T(X\theta-Y)
+\end{aligned}
+$$
+
+## 梯度下降法
+
+类似的,也将梯度下降法写为矩阵形式:
+$$
+\theta:=\theta−\alpha\nabla J=\theta−\alpha
+\begin{pmatrix}
+\frac{\partial J}{\partial\theta_1} \\\\
+\frac{\partial J}{\partial\theta_2} \\\\
+\vdots \\\\
+\frac{\partial J}{\partial\theta_n}
+\end{pmatrix}
+$$
+将评估函数代入得到:
+$$\theta:=\theta-\frac\alpha mX^T(X\theta-Y)$$
+
+## 梯度下降法的预处理
+* 归一化处理
+为了提高梯度下降法的速度和精度,我们在用训练集训练前需要先对训练集进行归一化.具体做法如下:
+$$x_{norm}=\frac{x-\overline x}{x_{max}-x_{min}}$$
+将数据映射到$[-1,1]$,或通过:
+$$x_{norm}=\frac{x-x_{min}}{x_{max}-x_{min}}$$
+将数据映射到$[0,1]$.
+除了线性映射外,根据特征的分布也可以考虑通过其他函数进行映射.
+
+* 收敛验证
+由于评估函数的收敛性依赖于参数$\alpha$的选取,因此在实际迭代前应进行小规模的测试以找到较好的$\alpha$.
+
+* 优化模型和多项式回归
+有时候我们可以通过基本的特征得到更具有代表性的新的特征.如以特征的组合,或考虑非线性回归.
+
+# 正规方程
+
+考虑到评估函数是通过2-范数定义的,求评估函数最小值的问题转化成最小二乘问题.因此可以通过解正规方程求解.
+$$
+\begin{aligned}
+& X^TX\theta=X^TY \\\\
+& \theta=(X^TX)^{-1}X^TY
+\end{aligned}
+$$
+但$X^TX$在如下情况下会显示出奇性:
+
+* 存在某些特征直接高度相关.
+* 特征太多,在这种情况下可以通过正则化解决.
+
+虽然正规方程总是能得到最小二乘问题的最优解,但对大规模矩阵进行求逆运算并不是简单的事情.因此在$X^TX$很大时,推荐采用迭代法求解.
