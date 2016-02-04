@@ -1,0 +1,16 @@
+---
+layout: default
+title: 归档
+permalink: /categories/
+---
+
+<div class="site-categories">
+  {% for category in site.categories%}
+  <span class="category-title" onclick="">{{ category | first }} ({{ category | last | size }})</span>
+  <ui>
+    {% for post in category[1] %}
+    <li class="category-posts"><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ui>
+  {% endfor %}
+</div>

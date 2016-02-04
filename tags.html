@@ -1,0 +1,16 @@
+---
+layout: default
+title: 标签
+permalink: /tags/
+---
+
+{% for tag in site.tags%}
+<div class="site-tags">
+  <span class="tag-title">{{ tag | first }} ({{ tag | last | size }})</span>
+  <ui>
+    {% for post in tag[1] %}
+    <li class="tag-posts"><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ui>
+</div>
+{% endfor %}
