@@ -7,7 +7,8 @@
 
 # Site settings
 title: Phantato
-email: tzh_1997@qq.com
+auth: ZHTan
+email: phantatojames@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   I’m a college student majoring in Information and Computing science and this is a blog recording my learning notes.
 baseurl: "" # the subpath of your site, e.g. /blog
