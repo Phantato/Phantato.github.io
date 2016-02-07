@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>误差分析</title>
+  <meta name="description" content="对模型进行误差分析,可以帮助决定下一步应该做什么来改进模型.">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2016/01/04/%E8%AF%AF%E5%B7%AE%E5%88%86%E6%9E%90.html">
+  <link rel="alternate" type="application/rss+xml" title="Phantato" href="Phantato.github.io/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Phantato</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">关于</a>
+          
+        
+          
+          <a class="page-link" href="/categories/">归档</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/tags/">标签</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">误差分析</h1>
+    <p class="post-meta"><time datetime="2016-01-04T00:00:00+08:00" itemprop="datePublished">Jan 4, 2016</time></p>
+  </header>
+
+  <div>
+    标签： 
+    
+      <span class="post-tags">人工智能</span>
+    
+      <span class="post-tags">机器学习</span>
+    
+  </div>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>对模型进行误差分析,可以帮助决定下一步应该做什么来改进模型.</p>
+
+<!--exerpt-->
+
+<h2 id="section">验证模型</h2>
+
+<p>由机器学习算法给出的模型可能对训练集的适应程度很高,但这并不意味着模型很好.
+通过将样本集分为多个部分来改进模型.</p>
+
+<p>将样本分为训练集和测试集(通常比例可以为7:3),分别记为\(x_{train}\)、\(x_{test}\).其中\(x_{train}\)用于训练,\(x_{test}\)用于验证模型.
+常用方法是,求出\(J(h_\theta(x_{test}))\)、\(J(h_\theta(x_{train}))\),并绘制学习曲线观察收敛趋势.</p>
+
+<ul>
+  <li>如果有\(J(h_\theta(x_{test}))\approx J(h_\theta(x_{train}))\gt\epsilon\),称模型具有高偏差.</li>
+  <li>如果有\(J(h_\theta(x_{test}))\gt J(h_\theta(x_{train}))\),称模型具有高方差.</li>
+  <li>对于好的模型,应该有\(J(h_\theta(x_{test}))\approx J(h_\theta(x_{train}))\lt\epsilon\).</li>
+</ul>
+
+<h1 id="section-1">偏差-方差权衡</h1>
+
+<p>对于拟合问题,通常会遇到偏差—方差权衡.当假设模型图样图森破,欠拟合的时候,被称为具有高偏差.当假设模型过拟合而激烈震荡的时候,称为具有高方差.
+对于欠拟合问题,可以通过改进模型解决;对于过拟合问题,可以通过正则化解决.</p>
+
+<h2 id="section-2">改进模型</h2>
+
+<p>将样本分为训练集、交叉验证集和测试集三部分(6:4:4),分别记为\(x_{train}\)、\(x_{CV}\)、\(x_{test}\).其中\(x_{train}\)用于训练,\(x_{test}\)用于决定模型,\(x_{test}\)用于验证模型.</p>
+
+<ul>
+  <li>对于已经训练好的算法,求解
+\[\min_{model}J(h_\theta(x_{CV}))\]</li>
+  <li>对于好的模型,应该有\(J(h_\theta(x_{CV}))\approx J(h_\theta(x_{train}))\lt\epsilon\)</li>
+  <li>选择好模型后,用\(J(h_\theta(x_{test}))\)验证模型.</li>
+</ul>
+
+<h2 id="section-3">正则化</h2>
+
+<ul>
+  <li>
+    <p>参数正则化
+通过对评估函数加上约束,使假设模型更符合先验知识.
+\[\overline{J}(\theta) = J(\theta) + prior(\theta)\]
+其中\(J(\theta)\)为原评估函数,\(prior(\theta)\)为先验约束.
+如果选取的先验合适,噪声对模型的影响就会变小,模型将更简单,也更趋于实际情况.
+需要注意的是通常不考虑偏置单元的\(prior(\theta)\).
+正则化常用的先验约束如\({\lVert\cdot\rVert}_1\)、\({\lVert\cdot\rVert}_2\)等.</p>
+  </li>
+  <li>
+    <p>正规方程的正则化
+线性不适定问题中,由于\(X^TX\)不可逆,因此给出的解为:
+\[\theta = (X^TX+L)^{-1}X^TY\]
+其中
+\[
+L=
+\begin{pmatrix}
+0 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\<br />
+0 &amp; 1 &amp; 0 &amp; \cdots &amp; 0 \\<br />
+0 &amp; 0 &amp; 1 &amp; \cdots &amp; 0 \\<br />
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\<br />
+0 &amp; 0 &amp; 0 &amp; \cdots &amp; 1
+\end{pmatrix}
+\]</p>
+  </li>
+</ul>
+
+<h1 id="section-4">偏态分布</h1>
+
+<p>对于分类问题,样本很有可能是偏态分布的,即一部分类型的样本很少,其余类型较多.通过引入准确率和召回率来衡量误差.</p>
+
+<p>对于分类问题:
+\[
+h_\theta(x)=
+\begin{pmatrix}
+h_1(x,\theta) \\<br />
+h_2(x,\theta) \\<br />
+\vdots\\\<br />
+h_k(x,\theta)
+\end{pmatrix}
+\\<br />
+h_i(x,\theta)=
+\begin{cases}
+1 &amp; h_i(x,\theta)\geq threshold_i \\<br />
+0 &amp; h_i(x,\theta)\lt threshold_i
+\end{cases}
+\]</p>
+
+<p>为方便说明，先给出如下定义：
+\[
+\begin{matrix}
+       &amp; 实际真 &amp; 实际假 \\<br />
+预测真 &amp;   tp   &amp;   fp   \\<br />
+预测假 &amp;   fn   &amp;   tn
+\end{matrix}
+\]</p>
+
+<p>定义:</p>
+
+<ul>
+  <li>
+    <p>准确率:
+\[P_i(h_i) = \frac{tp}{tp+fp}\]</p>
+  </li>
+  <li>
+    <p>召回率:
+\[R_i(h_i) = \frac{tp}{tp+fn}\]</p>
+  </li>
+</ul>
+
+<h2 id="section-5">改变阈值</h2>
+
+<p>通过改变阈值,可以改变准确率和召回率.</p>
+
+<ul>
+  <li>提高阈值,准确率将升高,召回率将降低.</li>
+  <li>降低阈值,准确率将降低,召回率将升高.</li>
+</ul>
+
+<p>一般情况下,通过交叉验证集求解:
+\[\min_{threshold}\frac 1{\frac1P+\frac1R}\]
+使两者都较小</p>
+
+  </div>
+</article>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Phantato</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>ZHTan</li>
+          <li><a href="mailto:phantatojames@gmail.com">phantatojames@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/Phantato"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">Phantato</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>I’m a college student majoring in Information and Computing science and this is a blog recording my learning notes.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

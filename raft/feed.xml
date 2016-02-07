@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Phantato</title>
+    <description>I’m a college student majoring in Information and Computing science and this is a blog recording my learning notes.
+</description>
+    <link>Phantato.github.io/</link>
+    <atom:link href="Phantato.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 04 Feb 2016 23:20:51 +0800</pubDate>
+    <lastBuildDate>Thu, 04 Feb 2016 23:20:51 +0800</lastBuildDate>
+    <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>误差分析</title>
+        <description>&lt;p&gt;对模型进行误差分析,可以帮助决定下一步应该做什么来改进模型.&lt;/p&gt;
+
+&lt;!--exerpt--&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;验证模型&lt;/h2&gt;
+
+&lt;p&gt;由机器学习算法给出的模型可能对训练集的适应程度很高,但这并不意味着模型很好.
+通过将样本集分为多个部分来改进模型.&lt;/p&gt;
+
+&lt;p&gt;将样本分为训练集和测试集(通常比例可以为7:3),分别记为\(x_{train}\)、\(x_{test}\).其中\(x_{train}\)用于训练,\(x_{test}\)用于验证模型.
+常用方法是,求出\(J(h_\theta(x_{test}))\)、\(J(h_\theta(x_{train}))\),并绘制学习曲线观察收敛趋势.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果有\(J(h_\theta(x_{test}))\approx J(h_\theta(x_{train}))\gt\epsilon\),称模型具有高偏差.&lt;/li&gt;
+  &lt;li&gt;如果有\(J(h_\theta(x_{test}))\gt J(h_\theta(x_{train}))\),称模型具有高方差.&lt;/li&gt;
+  &lt;li&gt;对于好的模型,应该有\(J(h_\theta(x_{test}))\approx J(h_\theta(x_{train}))\lt\epsilon\).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt;偏差-方差权衡&lt;/h1&gt;
+
+&lt;p&gt;对于拟合问题,通常会遇到偏差—方差权衡.当假设模型图样图森破,欠拟合的时候,被称为具有高偏差.当假设模型过拟合而激烈震荡的时候,称为具有高方差.
+对于欠拟合问题,可以通过改进模型解决;对于过拟合问题,可以通过正则化解决.&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;改进模型&lt;/h2&gt;
+
+&lt;p&gt;将样本分为训练集、交叉验证集和测试集三部分(6:4:4),分别记为\(x_{train}\)、\(x_{CV}\)、\(x_{test}\).其中\(x_{train}\)用于训练,\(x_{test}\)用于决定模型,\(x_{test}\)用于验证模型.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;对于已经训练好的算法,求解
+\[\min_{model}J(h_\theta(x_{CV}))\]&lt;/li&gt;
+  &lt;li&gt;对于好的模型,应该有\(J(h_\theta(x_{CV}))\approx J(h_\theta(x_{train}))\lt\epsilon\)&lt;/li&gt;
+  &lt;li&gt;选择好模型后,用\(J(h_\theta(x_{test}))\)验证模型.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;正则化&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;参数正则化
+通过对评估函数加上约束,使假设模型更符合先验知识.
+\[\overline{J}(\theta) = J(\theta) + prior(\theta)\]
+其中\(J(\theta)\)为原评估函数,\(prior(\theta)\)为先验约束.
+如果选取的先验合适,噪声对模型的影响就会变小,模型将更简单,也更趋于实际情况.
+需要注意的是通常不考虑偏置单元的\(prior(\theta)\).
+正则化常用的先验约束如\({\lVert\cdot\rVert}_1\)、\({\lVert\cdot\rVert}_2\)等.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;正规方程的正则化
+线性不适定问题中,由于\(X^TX\)不可逆,因此给出的解为:
+\[\theta = (X^TX+L)^{-1}X^TY\]
+其中
+\[
+L=
+\begin{pmatrix}
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 \\&lt;br /&gt;
+0 &amp;amp; 1 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 \\&lt;br /&gt;
+0 &amp;amp; 0 &amp;amp; 1 &amp;amp; \cdots &amp;amp; 0 \\&lt;br /&gt;
+\vdots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots \\&lt;br /&gt;
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 1
+\end{pmatrix}
+\]&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;section-4&quot;&gt;偏态分布&lt;/h1&gt;
+
+&lt;p&gt;对于分类问题,样本很有可能是偏态分布的,即一部分类型的样本很少,其余类型较多.通过引入准确率和召回率来衡量误差.&lt;/p&gt;
+
+&lt;p&gt;对于分类问题:
+\[
+h_\theta(x)=
+\begin{pmatrix}
+h_1(x,\theta) \\&lt;br /&gt;
+h_2(x,\theta) \\&lt;br /&gt;
+\vdots\\\&lt;br /&gt;
+h_k(x,\theta)
+\end{pmatrix}
+\\&lt;br /&gt;
+h_i(x,\theta)=
+\begin{cases}
+1 &amp;amp; h_i(x,\theta)\geq threshold_i \\&lt;br /&gt;
+0 &amp;amp; h_i(x,\theta)\lt threshold_i
+\end{cases}
+\]&lt;/p&gt;
+
+&lt;p&gt;为方便说明，先给出如下定义：
+\[
+\begin{matrix}
+       &amp;amp; 实际真 &amp;amp; 实际假 \\&lt;br /&gt;
+预测真 &amp;amp;   tp   &amp;amp;   fp   \\&lt;br /&gt;
+预测假 &amp;amp;   fn   &amp;amp;   tn
+\end{matrix}
+\]&lt;/p&gt;
+
+&lt;p&gt;定义:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;准确率:
+\[P_i(h_i) = \frac{tp}{tp+fp}\]&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;召回率:
+\[R_i(h_i) = \frac{tp}{tp+fn}\]&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;改变阈值&lt;/h2&gt;
+
+&lt;p&gt;通过改变阈值,可以改变准确率和召回率.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;提高阈值,准确率将升高,召回率将降低.&lt;/li&gt;
+  &lt;li&gt;降低阈值,准确率将降低,召回率将升高.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;一般情况下,通过交叉验证集求解:
+\[\min_{threshold}\frac 1{\frac1P+\frac1R}\]
+使两者都较小&lt;/p&gt;
+</description>
+        <pubDate>Mon, 04 Jan 2016 00:00:00 +0800</pubDate>
+        <link>Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2016/01/04/%E8%AF%AF%E5%B7%AE%E5%88%86%E6%9E%90.html</link>
+        <guid isPermaLink="true">Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2016/01/04/%E8%AF%AF%E5%B7%AE%E5%88%86%E6%9E%90.html</guid>
+        
+        <category>人工智能</category>
+        
+        <category>机器学习</category>
+        
+        
+        <category>人工智能</category>
+        
+      </item>
+    
+      <item>
+        <title>分类问题</title>
+        <description>&lt;p&gt;对于分类问题的输出,y不再是一个有连续值域的向量函数,而是逻辑函数.&lt;/p&gt;
+
+&lt;!--exerpt--&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;假设函数&lt;/h2&gt;
+
+&lt;p&gt;对于分类问题而言,我们通过叫做逻辑回归的方法给出假设.逻辑回归中用到的假设函数\(h_\theta(x)\)是S型函数:
+\[
+h_\theta(x)=g(\theta^Tx)=\frac 1{1+e^{-\theta^Tx}}
+\]
+S型函数将大致给出样本X为0或1的可能性.&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;决策边界&lt;/h2&gt;
+
+&lt;p&gt;注意到有
+\[
+\begin{aligned}
+\lim_{x \to \infty}e^{-x} &amp;amp; = 0 \\&lt;br /&gt;
+\lim_{x \to -\infty}e^{-x} &amp;amp; = \infty \\&lt;br /&gt;
+e^0 &amp;amp; = 1
+\end{aligned}
+\]
+因此
+\(g(z)\geq0.5\)当且仅当\(z\geq0\)
+这时我们令
+\[
+h(x)=
+\begin{cases}
+1 &amp;amp; h_\theta(x)\geq0.5 \&lt;br /&gt;
+0 &amp;amp; h_\theta(x)\lt0.5
+\end{cases}
+\]&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;评估函数&lt;/h2&gt;
+
+&lt;p&gt;对每一个样本,给出如下的评估:
+\[
+cost(x,y) =
+\begin{cases}
+-ln(h_\theta(x)) &amp;amp; y = 1 \\&lt;br /&gt;
+-ln(1-h_\theta(x)) &amp;amp; y = 0
+\end{cases}
+\]
+注意到:
+\[
+cost(x,y) \to
+\begin{cases}
+0 &amp;amp; h_\theta(x) \to y \\&lt;br /&gt;
+\infty &amp;amp; else
+\end{cases}
+\]
+将评估函数化简为:
+\[\overline{cost}(x,y) = -(y * ln(h_\theta(x))+(1-y)*ln(1-h_\theta(x)))\]
+定义:
+\[J(\theta) = \frac 1m\sum_{i=1}^m\overline{cost}(x^{(i)},y^{(i)})\]&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;梯度下降&lt;/h2&gt;
+
+&lt;p&gt;仍然使用梯度下降法进行优化.
+\[\theta := \theta - \alpha * \nabla J\]
+将\(J(\theta)\)代入得:
+\[\theta := \theta - \frac\alpha{m}X^T(g(\theta X)-y)\]
+除梯度下降法外,也有许多高级优化方法可以更快、更好地收敛&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;一对多策略&lt;/h2&gt;
+
+&lt;p&gt;考虑到多类型分类问题时,简单地将\(y\)换作\(y=(y_1,y_2,\cdots,y_n)^T\),将一个多类问题转化为多个单类问题.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 28 Dec 2015 00:00:00 +0800</pubDate>
+        <link>Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2015/12/28/%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98.html</link>
+        <guid isPermaLink="true">Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2015/12/28/%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98.html</guid>
+        
+        <category>人工智能</category>
+        
+        <category>机器学习</category>
+        
+        
+        <category>人工智能</category>
+        
+      </item>
+    
+      <item>
+        <title>回归问题</title>
+        <description>&lt;p&gt;前面提到在回归问题中,我们试图构造出从自变量到因变量的连续映射.&lt;/p&gt;
+
+&lt;!--exerpt--&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;假设函数&lt;/h2&gt;
+
+&lt;p&gt;单变量线性回归的假设函数定义为:
+\[h_\theta(x)=\theta_0+\theta_1x\]
+我们通过确定待定系数\(\theta_0\)和\(\theta_1\)来给出一个\(y=h_\theta(x)\).换言之,我们试图给出一个从输入(x)到输出(y)的线性函数\(h_\theta(x)\)&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;评估函数&lt;/h2&gt;
+
+&lt;p&gt;我们通过评估函数来判断我们的假设函数好坏. 评估函数\(J(\theta_0,\theta_1)\)定义如下:
+\[J(\theta_0,\theta_1)=\frac1{2m}\sum_{i=1}^m(h_\theta(x^{(i)})−y^{(i)})^2\]
+单独看每一项,它是\(\frac12\Delta y\),其中\(\Delta y\)代表\(h_\theta(x^{(i)})−y^{(i)}\),或者说估计值和实际值的差.
+这个函数也被叫做“平方误差函数”.除以2只是为了应用梯度下降法时的计算方便.&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;梯度下降法&lt;/h2&gt;
+
+&lt;p&gt;现在我们有了假设函数和评估它好坏的评估函数,接下来我们需要计算出假设函数中的待定系数.在单变量线性回归中我们使用梯度下降法来求解.
+梯度下降法的迭代形式为:
+\[\theta_i:=\theta_i−\alpha\frac{\partial J}{\partial\theta_i}\]
+其中\(\alpha\)为给定的学习速度.
+通过梯度下降法可以求解如下局部优化问题:
+\[\min_{\theta_1,\theta_2,\cdots,\theta_n} J(\theta_1,\theta_2,\cdots,\theta_n)\]&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;单变量线性回归中的梯度下降法&lt;/h2&gt;
+
+&lt;p&gt;当实际应用于单变量线性回归时,我们把评估函数代入到迭代公式中,可以得到:
+\[
+\begin{aligned}
+\theta_0 &amp;amp; :=\theta_0-\frac\alpha m\sum_{i=1}^m(h_\theta(x^{(i)})-y^{(i)}) \&lt;br /&gt;
+\theta_1 &amp;amp; :=\theta_1-\frac\alpha m\sum_{i=1}^m(h_\theta(x^{(i)})-y^{(i)})x^{(i)}
+\end{aligned}
+\]
+其中m为训练集所包含的样本个数.&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;多个变量&lt;/h2&gt;
+
+&lt;p&gt;有时候一个训练样本可能有多个特征,自然我们需要研究多变量情况下的线性回归.
+接下来将尽可能地使用线性代数描述输入和输出的关系.&lt;/p&gt;
+
+&lt;p&gt;用\(x_i^{(j)}\)表示第j个训练样本的第i个特征,其中\(x_0^{(j)}=1\).&lt;strong&gt;训练集&lt;/strong&gt;可以写为:
+\[
+X=
+\begin{pmatrix}
+x_0^{(1)} &amp;amp; x_1^{(1)} &amp;amp; \cdots &amp;amp; x_n^{(1)} \\&lt;br /&gt;
+x_0^{(2)} &amp;amp; x_1^{(2)} &amp;amp; \cdots &amp;amp; x_n^{(2)} \\&lt;br /&gt;
+\vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots \\&lt;br /&gt;
+x_0^{(m)} &amp;amp; x_1^{(m)} &amp;amp; \cdots &amp;amp; x_n^{(m)}
+\end{pmatrix},
+Y=
+\begin{pmatrix}
+y^{(1)} \\ y^{(2)} \\ \vdots \\ y^{(m)}
+\end{pmatrix}
+\]&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;假设函数&lt;/h2&gt;
+
+&lt;p&gt;过对单变量线性回归中的假设函数进行推广,可以得到:
+\[h_\theta(x)=\sum_{i=0}^n \theta_i*x_i=\theta^Tx\]&lt;/p&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;评估函数&lt;/h2&gt;
+&lt;p&gt;通过对单变量线性回归中的评估函数进行推广,可以得到:
+\[
+\begin{aligned}
+J(\theta) &amp;amp; =\frac 1{2m}\sum_{j=1}^m(h_\theta(x^{(j)})−y^{(j)})^2 \&lt;br /&gt;
+&amp;amp; =\frac 1{2m}(X\theta-Y)^T(X\theta-Y)
+\end{aligned}
+\]&lt;/p&gt;
+
+&lt;h2 id=&quot;section-7&quot;&gt;梯度下降法&lt;/h2&gt;
+
+&lt;p&gt;类似的,也将梯度下降法写为矩阵形式:
+\[
+\theta:=\theta−\alpha\nabla J=\theta−\alpha
+\begin{pmatrix}
+\frac{\partial J}{\partial\theta_1} \\ \frac{\partial J}{\partial\theta_2} \\ \vdots \\ \frac{\partial J}{\partial\theta_n}
+\end{pmatrix}
+\]
+将评估函数代入得到:
+\[\theta:=\theta-\frac\alpha mX^T(X\theta-Y)\]&lt;/p&gt;
+
+&lt;h2 id=&quot;section-8&quot;&gt;梯度下降法的预处理&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;归一化处理
+为了提高梯度下降法的速度和精度,我们在用训练集训练前需要先对训练集进行归一化.具体做法如下:
+\[x_{norm}=\frac{x-\overline x}{x_{max}-x_{min}}\]
+将数据映射到\([-1,1]\),或通过:
+\[x_{norm}=\frac{x-x_{min}}{x_{max}-x_{min}}\]
+将数据映射到\([0,1]\).
+除了线性映射外,根据特征的分布也可以考虑通过其他函数进行映射.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;收敛验证
+由于评估函数的收敛性依赖于参数\(\alpha\)的选取,因此在实际迭代前应进行小规模的测试以找到较好的\(\alpha\).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;优化模型和多项式回归
+有时候我们可以通过基本的特征得到更具有代表性的新的特征.如以特征的组合,或考虑非线性回归.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;section-9&quot;&gt;正规方程&lt;/h1&gt;
+
+&lt;p&gt;考虑到评估函数是通过2-范数定义的,求评估函数最小值的问题转化成最小二乘问题.因此可以通过解正规方程求解.
+\[
+\begin{aligned}
+&amp;amp; X^TX\theta=X^TY \&lt;br /&gt;
+&amp;amp; \theta=(X^TX)^{-1}X^TY
+\end{aligned}
+\]
+但\(X^TX\)在如下情况下会显示出奇性:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;存在某些特征直接高度相关.&lt;/li&gt;
+  &lt;li&gt;特征太多,在这种情况下可以通过正则化解决.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;虽然正规方程总是能得到最小二乘问题的最优解,但对大规模矩阵进行求逆运算并不是简单的事情.因此在\(X^TX\)很大时,推荐采用迭代法求解.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 21 Dec 2015 00:00:00 +0800</pubDate>
+        <link>Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2015/12/21/%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98.html</link>
+        <guid isPermaLink="true">Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2015/12/21/%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98.html</guid>
+        
+        <category>人工智能</category>
+        
+        <category>机器学习</category>
+        
+        
+        <category>人工智能</category>
+        
+      </item>
+    
+      <item>
+        <title>机器学习绪论</title>
+        <description>&lt;p&gt;机器学习是近20多年兴起的一门多领域交叉学科,涉及概率论、统计学、逼近论、凸分析、计算复杂性理论等多门学科.&lt;/p&gt;
+
+&lt;!--exerpt--&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;有监督学习&lt;/h2&gt;
+
+&lt;p&gt;在监督学习中,我们给出每个样本的输入和对应的输出.
+监督学习包含&lt;strong&gt;“回归问题”&lt;/strong&gt;和&lt;strong&gt;“分类问题”&lt;/strong&gt;两类问题. 在&lt;strong&gt;回归问题&lt;/strong&gt;中,我们试图构造一个连续函数,用于将输入映射到输出.而在&lt;strong&gt;分类问题&lt;/strong&gt;中,我们将给出离散的输出结果.&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;无监督学习&lt;/h2&gt;
+
+&lt;p&gt;无监督学习则不需要已知输出的结果.而是从数据中建立出需要的模型,并且不需要知道每个自变量对结果的影响.如通过聚类问题将可以数据分成若干类.
+另外,无监督学习除了聚类问题外还有许多其他形式.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 14 Dec 2015 00:00:00 +0800</pubDate>
+        <link>Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2015/12/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%BB%AA%E8%AE%BA.html</link>
+        <guid isPermaLink="true">Phantato.github.io/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2015/12/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%BB%AA%E8%AE%BA.html</guid>
+        
+        <category>人工智能</category>
+        
+        <category>机器学习</category>
+        
+        
+        <category>人工智能</category>
+        
+      </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,86 @@
+---
+layout: post
+title: 人工神经网络
+category: 人工智能
+tags: [人工智能, 机器学习]
+---
+人工神经网络是对大脑功能的有限模拟
+
+<!--exerpt-->
+
+## 概念
+
+人工神经网络可以用图形象地表示为
+\\[
+\begin{bmatrix}
+x_0 \\\\ x_1 \\\\ \vdots \\\\ x_n
+\end{bmatrix}
+\to
+\begin{bmatrix}
+a_0 \\\\ a_1 \\\\ \vdots \\\\ a_{n_2}
+\end{bmatrix}
+\to
+\cdots
+\to
+\begin{bmatrix}
+y_0 \\\\ y_1 \\\\ \vdots \\\\ y_k
+\end{bmatrix}
+\\]
+其中，X为输入层，A为隐含层（可能不只一个），Y为输出层。
+
+记：
+
+* \\(a_i^{(j)}\\)为第j个隐含层的第i个激励神经元。特别的，\\(a_i^{(0)}\\)为偏差神经元。
+* \\(\theta_{i,k}^{(j)}\\)为第j个隐含层的第i个激励神经元对第j+1层的第k个激励神经元的权重（记输入层为第1层）。
+
+激励神经元\\(a_i^{(j)}\\)的值为：
+\\[a_i^{(j)} = g_i^{(j)}(\theta_iA_i)\\]
+其中\\(g(x)\\)为对应的激励函数，如逻辑函数、正切函数等。
+
+从上述分析可以知道，Y依然是X的函数，为方便叙述，采用逻辑函数作为所有的激励函数，且记：
+\\[Y = h(X;\Theta)\\]
+
+## 评估函数
+
+对于人工神经网络，定义评估函数\\(J(\Theta)\\)为：
+\\[J(\Theta) = \sum_{i = 1}^m cost(y^{(i)}, h(X^{(i)};\Theta))\\]
+
+对于逻辑函数，评估函数可以具体化为：
+\\[
+J(\Theta) = -\left[\sum_{i = 1}^m \sum_{j = 1}^K y_j^{(i)}\ln\left({h_j(x^{(i)};\Theta})\right)+y_j^{(i)}\ln\left(1-h_j(x^{(i)};\Theta)\right)\right]+\lambda\sum_{l = 1}^{L-1}\sum_{i = 1}\sum_{j = 1}\{(\theta_{i,j}^{(l)})}^2
+\\]
+后一项为正则化项.注意正则化项不包含偏差神经元的权重。
+
+## 反响传播算法
+
+为了最小化评估函数\\(J(\Theta)\\),同样采用梯度下降法。
+\\[\theta_{i,j}^{(l)}: = \theta_{i,j}^{(l)}-\alpha\frac{\partial J}{\partial\theta_{i,j}^{(l)}}\\]
+在人工神经网络中，这个算法被称为误差反响传播算法。
+
+\\[
+\frac{\rm DJ}{\rm D\Theta^{(l)}} = \frac{\rm DJ}{\rm Da^{(L)}} \frac{\rm Da^{(L)}}{\rm Da^{(L-1)}} \cdots \frac{\rm Da^{(l+1)}}{\rm D\theta^{(l)}} \\\\\\
+\\]
+并且有:
+\\[
+\begin{aligned}
+\frac{\rm Da^{(l+1)}}{\rm Da^{(l)}} & = \frac{\rm da^{(l+1)}}{\rm d(a^{(l)}\Theta^{(l)})}{\Theta^{(l)}}^T \\\\\\
+\frac{\rm Da^{(l+1)}}{\rm D\theta^{(l)}} & = {a^{(l)}}^T\frac{\rm da^{(l+1)}}{\rm d(a^{(l)}\Theta^{(l)})}
+\end{aligned}
+\\]
+
+算法实现：
+\\[
+\delta^{(L)} = a^{(L)}-Y \\\\\\
+\delta_{i}^{(l)} = (\Theta^{(l)},\delta^{(l+1)})a_{i}^{(l)}(1-a_{i}^{(l)}) \\\\\\
+\frac{\rm DJ}{\rm D\Theta^{(l)}} = {a^{(l)}}^T(\delta^{(l+1)})
+\\]
+
+
+
+## 随机初始化
+
+很容易计算得出，如果初始化参数\\(\Theta\\)为\\(\bf 0\\)，所有的神经元将学习到完全同样的特征，这样没有意义。因此，通过随机初始化\\(\Theta\\)来让神经元学习到不同的特征。
+
+## 多次学习
+
+需要指出的是，人工神经网络并不能转化为凸优化问题，因此单次优化不一定能收敛到全局最优解。通过多次随机初始化，试图寻找一个较优的解，这样即使不是全局最优，性质也足够好了。
