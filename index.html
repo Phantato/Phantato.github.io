@@ -15,7 +15,11 @@ layout: default
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
         </h2>
         <p>{{ post.excerpt }}</p>
-        <p>分类:{{ post.categories }}</p>
+        <p>分类:
+          {% for cat in post.categories %}
+          <span>{{ cat }}</span>
+          {% endfor %}
+        </p>
       </li>
     {% endfor %}
   </ul>
