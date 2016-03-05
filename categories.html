@@ -1,16 +1,16 @@
 ---
-layout: default
-title: 归档
+layout: categories
+title: 分类
 permalink: /categories/
 ---
 
-<div class="site-categories">
-  {% for category in site.categories%}
-  <span class="category-title" onclick="">{{ category | first }} ({{ category | last | size }})</span>
-  <ui>
+{% for category in site.categories%}
+<div class="site-categories"  onclick="showThisCategory(this)">
+  <button class="category-title">{{ category | first }} ({{ category | last | size }})</button>
+  <ui class="category-posts">
     {% for post in category[1] %}
-    <li class="category-posts"><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
+    <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
     {% endfor %}
   </ui>
-  {% endfor %}
 </div>
+{% endfor %}

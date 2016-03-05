@@ -11,7 +11,4 @@ College of Science, Nanjing University of Aeronautics and Astronautics(NUAA), Na
 
 ## Area of interest
 
-* Mathematical Optimization
-* Artificial Intelligence
-* DSA
-
+I'm quite interested in Data Science and Formal Science, and wanna be a data scientist or a mathematist one day.
