@@ -2,7 +2,7 @@ function showThisCategory(node)
 {
     disp = node.getElementsByClassName("category-posts-show")[0]
     if(disp){
-        disp.className = "catagory-posts"
+        disp.className = "category-posts"
         return
     }
     disp = document.getElementsByClassName("category-posts-show")[0]

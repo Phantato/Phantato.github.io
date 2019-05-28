@@ -5,7 +5,7 @@ permalink: /categories/
 ---
 
 {% for category in site.categories%}
-<inline-block class="site-categories"  onclick="showThisCategory(this)">
+<div class="site-categories"  onclick="showThisCategory(this)">
   <a class="category-title">{{ category | first }} ({{ category | last | size }})</a>
   <ui class="category-posts">
     {% for post in category[1] %}
