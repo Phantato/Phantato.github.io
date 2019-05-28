@@ -1,16 +1,16 @@
 ---
 layout: categories
-title: 分类
+title: Category
 permalink: /categories/
 ---
 
 {% for category in site.categories%}
-<div class="site-categories"  onclick="showThisCategory(this)">
+<inline-block class="site-categories"  onclick="showThisCategory(this)">
   <a class="category-title">{{ category | first }} ({{ category | last | size }})</a>
   <ui class="category-posts">
     {% for post in category[1] %}
     <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
     {% endfor %}
   </ui>
-</div>
+</inline-block>
 {% endfor %}
